@@ -95,6 +95,7 @@ body {
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 5px 15px rgba(0, 0, 0, .1);
+  z-index: 1000;
 }
 
 .nav .nav-menu {
@@ -142,8 +143,40 @@ body {
   cursor: pointer;
 }
 
+.nav-bars-icon {
+  font-size: 29px;
+  display: none;
+}
+
 .nav-login-signin button:nth-child(2) {
   margin-left: 15px;
+}
+
+.nav-toggle-menu {
+  background: rgb(255, 255, 255);
+  padding: 30px;
+  position: absolute;
+  right: 0;
+  top: 55px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  display: none;
+}
+
+.nav-toggle-menu.open {
+  display: block;
+}
+
+.nav-toggle-menu ul li {
+  list-style: none;
+  padding: 10px 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, .1);
+  cursor: pointer;
+}
+.nav-toggle-menu ul li:hover
+{
+  color: #ec64fb;
+  font-size: 14px;
 }
 
 /********** Information Box *******************/
@@ -159,6 +192,7 @@ body {
   padding: 20px;
   border-radius: 20px;
   background: #fff;
+  z-index: 500;
 }
 
 .info-box p {
@@ -277,10 +311,11 @@ body {
   width: 100%;
   text-align: center;
 }
-.enter-question-form input
-{
+
+.enter-question-form input {
   padding: 0 0 0 5px;
 }
+
 .enter-question-form label #question {
   margin-left: 5px;
   width: 323px;
@@ -322,4 +357,31 @@ body {
   background: #29ed71;
   border: 1px solid rgba(0, 0, 0, .5);
   cursor: pointer;
+}
+
+/****** Responsive ********/
+@media screen and (max-width: 992px) {
+  .nav .nav-menu {
+    display: none;
+  }
+
+  .nav-login-signin {
+    display: none;
+  }
+
+
+  .nav-bars-icon {
+    display: block;
+  }
+
+  .side-bar {
+    display: none;
+  }
+
+  .info-box,
+  .test-table {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }

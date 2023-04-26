@@ -1,30 +1,54 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faBars,
+  faHouse,
+  faPen,
+  faHandshake,
+  faComment,
+} from "@fortawesome/free-solid-svg-icons";
 import { questions } from "./data";
 import { useState } from "react";
 import "./App.css";
-
+import logo from "./logo.png";
 export default function Ungdung() {
   const [isHome, setIsHome] = useState(true);
   const [isTest, setTest] = useState(false);
+  const [input, setInput] = useState([]);
   return (
-    <>
+    <div className="container">
       <Navigation setIsHomeAr={setIsHome} setIsTest={setTest} />
       <Sidebar />
       {isTest === true && <Test />}
       {isHome === true && (
         <InforMyWeb setIsTest={setTest} setIsHomeAr={setIsHome} />
       )}
-      {isTest === false && isHome === false && <Enterquestion />}
+      {isTest === false && isHome === false && (
+        <Enterquestion input={input} setInput={setInput} />
+      )}
       <Footer />
-    </>
+    </div>
   );
 }
-export function Enterquestion() {
+export function Enterquestion({ input, setInput }) {
+  const inputObject = {};
+  const handleInput = (e) => {
+    inputObject.question = e.target.value;
+  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setInput([...input, inputObject]);
+  };
   return (
-    <form className="enter-question-form">
+    <form className="enter-question-form" onSubmit={handleSubmit}>
       <h1>Nhập câu hỏi của bạn</h1>
       <label>
         Câu hỏi:
-        <input type="text" id="question" placeholder="Bạn khỏe không?" />
+        <input
+          type="text"
+          onChange={handleInput}
+          id="question"
+          placeholder="Bạn khỏe không?"
+        />
       </label>
       <div className="answer-group">
         <label>
@@ -109,10 +133,15 @@ export function Navigation({ setIsHomeAr, setIsTest }) {
     setIsTest(false);
     setIsHomeAr(false);
   };
+  let handleToggleMenu = () =>
+  {
+      let toggleMenu = document.querySelector('.nav-toggle-menu');
+      toggleMenu.classList.toggle('open');
+  }
   return (
     <header className="nav">
       <div id="nav-logo">
-        <img src="logo.png" alt="logo" width={50} height={50} />
+        <img src={logo} alt="logo" width={50} height={50} />
       </div>
       <ul className="nav-menu">
         <li onClick={handleConvertToHome}>Trang Chủ</li>
@@ -124,6 +153,28 @@ export function Navigation({ setIsHomeAr, setIsTest }) {
       <div className="nav-login-signin">
         <button>Đăng Ký</button>
         <button>Đăng Nhập</button>
+      </div>
+      <FontAwesomeIcon className="nav-bars-icon" icon={faBars} onClick={handleToggleMenu}/>
+      <div className="nav-toggle-menu">
+        <ul>
+          <li onClick={handleConvertToHome}>
+            {" "}
+            <FontAwesomeIcon icon={faHouse} /> Trang Chủ
+          </li>
+          <li onClick={handleConvertToTest}>
+            {" "}
+            <FontAwesomeIcon icon={faPen} /> Thi Thử
+          </li>
+          <li onClick={handleEnterQuestion}> + Tạo đề thi</li>
+          <li>
+            {" "}
+            <FontAwesomeIcon icon={faHandshake} /> Hợp Tác
+          </li>
+          <li>
+            {" "}
+            <FontAwesomeIcon icon={faComment} /> Phản Hồi
+          </li>
+        </ul>
       </div>
     </header>
   );
