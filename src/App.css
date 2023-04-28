@@ -407,7 +407,12 @@ body {
   }
 
   .container {
-    height: 650px;
+    height: 540px;
+  }
+  .test-table
+  {
+    position: relative;
+    width: 400px;
   }
 }
 
@@ -430,5 +435,9 @@ body {
 
   .info-box .info-box-button {
     padding: 0;
+  }
+  .test-table
+  {
+    width: 240px;
   }
 }
