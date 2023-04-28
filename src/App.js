@@ -25,8 +25,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { SignLanguage } from "@mui/icons-material";
-
+import CircularProgress from "@mui/material/CircularProgress";
+localStorage.setItem("signupInfo", JSON.stringify({ email: "", password: "" }));
 export default function Ungdung() {
   const [isHome, setIsHome] = useState(true);
   const [isTest, setTest] = useState(false);
@@ -34,7 +34,11 @@ export default function Ungdung() {
   const [isSignup, setIsSignUp] = useState(false);
   return (
     <div className="container">
-      {isLogin && <LogIn setIsLogin={setIsLogin} setIsSignUp={setIsSignUp} />}
+      {isLogin && (
+        <>
+          <LogIn setIsLogin={setIsLogin} setIsSignUp={setIsSignUp} />
+        </>
+      )}
       {isSignup && isLogin === false && (
         <SignUp setIsLogin={setIsLogin} setIsSignUp={setIsSignUp} />
       )}
@@ -80,23 +84,29 @@ function Copyright(props) {
 const theme = createTheme();
 
 function LogIn({ setIsSignUp, setIsLogin }) {
+  const [isLoadingLogin, setIsLoadingLogin] = useState(false);
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const inputLogin = {
       email: data.get("email"),
-      password: data.get("password")
+      password: data.get("password"),
     };
     console.log(inputLogin);
     const localInfo = JSON.parse(localStorage.getItem("signupInfo"));
-    if (
-      inputLogin.email === localInfo.email &&
-      inputLogin.password === localInfo.password
-    ) {
-      setIsLogin(false);
-      setIsSignUp(false);
-    }
-    console.log(localInfo.email);
+    setIsLoadingLogin(true);
+    setTimeout(() => {
+      setIsLoadingLogin(false);
+      if (
+        inputLogin.email === localInfo.email &&
+        inputLogin.password === localInfo.password
+      ) {
+        setIsLogin(false);
+        setIsSignUp(false);
+      } else {
+        alert("Ban chua co tai khoan! Hay tao tai khoan!");
+      }
+    }, 2000);
   };
   const handleSignUp = () => {
     setIsLogin(false);
@@ -104,6 +114,7 @@ function LogIn({ setIsSignUp, setIsLogin }) {
   };
   return (
     <ThemeProvider theme={theme}>
+      {isLoadingLogin && <CircularProgress className="spinner" />}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -180,6 +191,7 @@ function LogIn({ setIsSignUp, setIsLogin }) {
 
 /***************** FORM SIGN UP ***********************/
 function SignUp({ setIsLogin, setIsSignUp }) {
+  const [isLoadingSignUp, setIsLoadingSignUp] = useState(false);
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -188,14 +200,19 @@ function SignUp({ setIsLogin, setIsSignUp }) {
       password: data.get("password"),
     };
     const localInfo = JSON.parse(localStorage.getItem("signupInfo"));
-    localInfo.email === infoUser.email
-      ? alert("Xin loi! Tai khoan nay da duoc su dung")
-      : setIsLogin(false);
-    setIsSignUp(false);
-    localStorage.setItem("signupInfo", JSON.stringify(infoUser));
+    setIsLoadingSignUp(true);
+    setTimeout(() => {
+      localInfo.email === infoUser.email
+        ? alert("Xin loi! Tai khoan nay da duoc su dung")
+        : setIsLogin(false);
+      setIsSignUp(false);
+      localStorage.setItem("signupInfo", JSON.stringify(infoUser));
+      setIsLoadingSignUp(false);
+    }, 2000);
   };
   return (
     <ThemeProvider theme={theme}>
+      {isLoadingSignUp && <CircularProgress className="spinner"/>}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -506,7 +523,7 @@ export function Test() {
           </div>
         </div>
       )}
-      {isLoading && <div className="loading"> Loading... </div>}
+      {isLoading && <CircularProgress className="spinner" />}
       {scoreCalculated && (
         <div className="calculateScore">
           {" "}
