@@ -14,14 +14,21 @@ body {
   height: 100vh;
   overflow: scroll;
 }
+
+.main
+{
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
 .test-board
 {
     position: absolute;
-    top: 50%;
-    left: 85%;
-    transform: translate(-85%, -50%);
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
     background: white;
-    width: 700px;
+    width: 800px;
     display: flex;
     padding: 20px;
     column-gap: 10px;
@@ -169,14 +176,10 @@ body {
   display: flex;
 }
 
-.nav-login-signin button {
-  padding: 7px 15px;
-  background: #ff8cff;
-  border: 1px solid rgba(0, 0, 0, .1);
-  border-radius: 15px;
-  color: #000;
-  box-shadow: 0 0 15px rgba(0, 0, 0, .2);
-  cursor: pointer;
+.nav-login-signin  {
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
 }
 
 .nav-bars-icon {
@@ -184,9 +187,6 @@ body {
   display: none;
 }
 
-.nav-login-signin button:nth-child(2) {
-  margin-left: 15px;
-}
 
 .nav-toggle-menu {
   background: rgb(255, 255, 255);

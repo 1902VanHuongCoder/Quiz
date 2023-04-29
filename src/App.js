@@ -30,43 +30,52 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
+import { styled } from "@mui/material/styles";
+import Badge from "@mui/material/Badge";
+
 localStorage.setItem("signupInfo", JSON.stringify({ email: "", password: "" }));
 
 export default function Ungdung() {
   const [isHome, setIsHome] = useState(true);
   const [isTest, setTest] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [isSignup, setIsSignUp] = useState(false);
   return (
     <div className="container">
-      {/* {isLogin && (
+      {isLogin && (
         <>
           <LogIn setIsLogin={setIsLogin} setIsSignUp={setIsSignUp} />
         </>
       )}
       {isSignup && isLogin === false && (
         <SignUp setIsLogin={setIsLogin} setIsSignUp={setIsSignUp} />
-      )} */}
+      )}
       {isSignup === false && isLogin === false && (
         <>
-          <Navigation
-            setIsHomeAr={setIsHome}
-            setIsTest={setTest}
-            setIsSignUp={setIsSignUp}
-            setIsLogin={setIsLogin}
-            setIsError={setIsError}
-          />
-          <Sidebar />
-          {isTest === true && isError === false && <Test />}
-          {isHome === true && isError === false && (
-            <InforMyWeb setIsTest={setTest} setIsHomeAr={setIsHome} />
-          )}
-          {isTest === false && isHome === false && isError === false && (
-            <Enterquestion />
-          )}
-          {isError === true && <BasicCard />}
-          <Footer />
+          <header>
+            <Navigation
+              setIsHomeAr={setIsHome}
+              setIsTest={setTest}
+              setIsSignUp={setIsSignUp}
+              setIsLogin={setIsLogin}
+              setIsError={setIsError}
+            />
+          </header>
+          {isTest === false && <Sidebar />}
+          <div className="main">
+            {isTest === true && isError === false && <Test />}
+            {isHome === true && isError === false && (
+              <InforMyWeb setIsTest={setTest} setIsHomeAr={setIsHome} />
+            )}
+            {isTest === false && isHome === false && isError === false && (
+              <Enterquestion />
+            )}
+            {isError === true && <BasicCard />}
+          </div>
+          <footer>
+            <Footer />
+          </footer>
         </>
       )}
     </div>
@@ -82,7 +91,7 @@ function BasicCard() {
         top: "50%",
         left: "50%",
         transform: "translate(-50%,-50%)",
-        boxShadow: "0 0 15px rgba(0,0,0,.2)"
+        boxShadow: "0 0 15px rgba(0,0,0,.2)",
       }}
       variant="outlined"
     >
@@ -432,12 +441,6 @@ export function Navigation({
     setIsHomeAr(false);
     setIsError(false);
   };
-  const handleSignUp = () => {
-    setIsSignUp(true);
-  };
-  const handleLogin = () => {
-    setIsLogin(true);
-  };
   let handleToggleMenu = () => {
     let toggleMenu = document.querySelector(".nav-toggle-menu");
     toggleMenu.classList.toggle("open");
@@ -447,6 +450,9 @@ export function Navigation({
   const handleError = () => {
     setIsError(true);
   };
+  let localInfo = JSON.parse(localStorage.getItem("signupInfo"));
+  let emailUser = localInfo.email;
+  let nameUser = emailUser.substring(0, emailUser.indexOf("@"));
   return (
     <header className="nav">
       <div id="nav-logo">
@@ -458,12 +464,20 @@ export function Navigation({
         <li onClick={handleEnterQuestion}>Tạo đề thi</li>
 
         {/***************** Default **************/}
+
         <li onClick={handleError}>Hợp Tác</li>
         <li onClick={handleError}>Phản Hồi</li>
       </ul>
       <div className="nav-login-signin">
-        <button onClick={handleSignUp}>Đăng Ký</button>
-        <button onClick={handleLogin}>Đăng Nhập</button>
+        <StyledBadge
+          className="avatar"
+          overlap="circular"
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          variant="dot"
+        >
+          <Avatar alt="Remy Sharp" src="" />
+        </StyledBadge>
+        <div className="nameuser">{nameUser}</div>
       </div>
       {isOpenToggleMenu ? (
         <FontAwesomeIcon
@@ -503,6 +517,35 @@ export function Navigation({
     </header>
   );
 }
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  "& .MuiBadge-badge": {
+    backgroundColor: "#44b700",
+    color: "#44b700",
+    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+    "&::after": {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      borderRadius: "50%",
+      animation: "ripple 1.2s infinite ease-in-out",
+      border: "1px solid currentColor",
+      content: '""',
+    },
+  },
+  "@keyframes ripple": {
+    "0%": {
+      transform: "scale(.8)",
+      opacity: 1,
+    },
+    "100%": {
+      transform: "scale(2.4)",
+      opacity: 0,
+    },
+  },
+}));
+
 export function Test() {
   const [curQue, setCurQue] = useState(0);
 
@@ -586,7 +629,17 @@ export function Test() {
               <button onClick={handleNext}>Next</button>
             )}
             {curQue === questions.length - 1 && (
-              <button onClick={handleScore} style={{color: '#000', background: '#ff8cff', border: '1px solid rgba(0,0,0,.3)', borderRadius: '2px'}}>Nộp bài</button>
+              <button
+                onClick={handleScore}
+                style={{
+                  color: "#000",
+                  background: "#ff8cff",
+                  border: "1px solid rgba(0,0,0,.3)",
+                  borderRadius: "2px",
+                }}
+              >
+                Nộp bài
+              </button>
             )}
           </div>
         </div>
@@ -600,7 +653,11 @@ export function Test() {
           Your score is: {calculateScore(aresult)}{" "}
         </div>
       )}
-      <QuestionTable currentQuestion={curQue} setCurQue={setCurQue} resultArray={resultArray}/>
+      <QuestionTable
+        currentQuestion={curQue}
+        setCurQue={setCurQue}
+        resultArray={resultArray}
+      />
     </div>
   );
 }
@@ -638,7 +695,7 @@ function QuestionTable({ currentQuestion, setCurQue, resultArray }) {
                     handleCurrentQuestion(question.id);
                   }}
                   className="question"
-                  style={{background: "#ff8cff"}}
+                  style={{ background: "#ff8cff" }}
                 >
                   {" "}
                   {question.id}
@@ -684,7 +741,11 @@ const CountdownTimer = ({ hours = 0, minutes = 30, seconds = 0 }) => {
   }, [remainingTime]);
 
   const tick = () => {
-    if (remainingTime.hours === 0 && remainingTime.minutes === 0 && remainingTime.seconds === 0)
+    if (
+      remainingTime.hours === 0 &&
+      remainingTime.minutes === 0 &&
+      remainingTime.seconds === 0
+    )
       reset();
     else if (remainingTime.minutes === 0 && remainingTime.seconds === 0)
       setRemainingTime({
@@ -715,12 +776,12 @@ const CountdownTimer = ({ hours = 0, minutes = 30, seconds = 0 }) => {
 
   return (
     <div>
-      <p>Thời gian còn lai:
-        {' '}
+      <p>
+        Thời gian còn lại:{" "}
         <b>
-        {remainingTime.hours.toString().padStart(2, '0')}:
-        {remainingTime.minutes.toString().padStart(2, '0')}:
-        {remainingTime.seconds.toString().padStart(2, '0')}
+          {remainingTime.hours.toString().padStart(2, "0")}:
+          {remainingTime.minutes.toString().padStart(2, "0")}:
+          {remainingTime.seconds.toString().padStart(2, "0")}
         </b>
       </p>
     </div>
