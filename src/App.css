@@ -117,6 +117,7 @@ body {
   background: #fff;
   border: 1px solid rgba(0,0,0,.5);
   border-radius: 5px;
+  cursor: pointer;
 }
 /************** Navigation *****************/
 .nav {
@@ -170,7 +171,7 @@ body {
 
 .nav-login-signin button {
   padding: 7px 15px;
-  background: #cc67eb;
+  background: #ff8cff;
   border: 1px solid rgba(0, 0, 0, .1);
   border-radius: 15px;
   color: #000;

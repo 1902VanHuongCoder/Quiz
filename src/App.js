@@ -8,7 +8,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { questions } from "./data";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import logo from "./logo.png";
 
@@ -82,6 +82,7 @@ function BasicCard() {
         top: "50%",
         left: "50%",
         transform: "translate(-50%,-50%)",
+        boxShadow: "0 0 15px rgba(0,0,0,.2)"
       }}
       variant="outlined"
     >
@@ -513,7 +514,6 @@ export function Test() {
 
   const [scoreCalculated, setScoreCalculated] = useState(false);
 
-  console.log(resultArray[curQue]);
   function calculateScore(array) {
     let sum = 0;
     array.map((element) => {
@@ -586,40 +586,143 @@ export function Test() {
               <button onClick={handleNext}>Next</button>
             )}
             {curQue === questions.length - 1 && (
-              <button onClick={handleScore}>Nộp bài</button>
+              <button onClick={handleScore} style={{color: '#000', background: '#ff8cff', border: '1px solid rgba(0,0,0,.3)', borderRadius: '2px'}}>Nộp bài</button>
             )}
           </div>
         </div>
       )}
-      { isLoading && <CircularProgress className="spinner" sx={{ color: "red"}}/>} 
+      {isLoading && (
+        <CircularProgress className="spinner" sx={{ color: "red" }} />
+      )}
       {scoreCalculated && (
         <div className="calculateScore">
           {" "}
           Your score is: {calculateScore(aresult)}{" "}
         </div>
       )}
-      <QuestionTable currentQuestion={curQue}/>
+      <QuestionTable currentQuestion={curQue} setCurQue={setCurQue} resultArray={resultArray}/>
     </div>
   );
 }
 
-function QuestionTable({currentQuestion}) {
+function QuestionTable({ currentQuestion, setCurQue, resultArray }) {
+  const handleCurrentQuestion = (id) => {
+    setCurQue(id - 1);
+  };
   return (
     <div className="test-questions-detail">
-      <h3>Thời gian còn lại: 30:22</h3>
+      <CountdownTimer />
       <p>Danh sách câu hỏi: </p>
       <div className="questions">
-        {questions.map((question) => 
-          {
-            if(question.id === currentQuestion + 1){
-              return <div style={{background: "#d3cbcb"}} key={question.id} className="question"> {question.id}</div>
-            }else
-            {
-              return <div key={question.id} className="question"> {question.id}</div>
+        {questions.map((question) => {
+          if (question.id === currentQuestion + 1) {
+            return (
+              <div
+                style={{ background: "#d3cbcb" }}
+                key={question.id}
+                onClick={() => {
+                  handleCurrentQuestion(question.id);
+                }}
+                className="question"
+              >
+                {" "}
+                {question.id}
+              </div>
+            );
+          } else {
+            if (resultArray[question.id - 1] !== undefined) {
+              return (
+                <div
+                  key={question.id}
+                  onClick={() => {
+                    handleCurrentQuestion(question.id);
+                  }}
+                  className="question"
+                  style={{background: "#ff8cff"}}
+                >
+                  {" "}
+                  {question.id}
+                </div>
+              );
+            } else {
+              return (
+                <div
+                  key={question.id}
+                  onClick={() => {
+                    handleCurrentQuestion(question.id);
+                  }}
+                  className="question"
+                >
+                  {" "}
+                  {question.id}
+                </div>
+              );
             }
           }
-        )}
+        })}
       </div>
     </div>
   );
 }
+
+const CountdownTimer = ({ hours = 0, minutes = 30, seconds = 0 }) => {
+  const [remainingTime, setRemainingTime] = useState({
+    hours,
+    minutes,
+    seconds,
+  });
+
+  useEffect(() => {
+    const timer =
+      remainingTime.seconds > 0 ||
+      remainingTime.minutes > 0 ||
+      remainingTime.hours > 0
+        ? setInterval(() => tick(), 1000)
+        : null;
+
+    return () => clearInterval(timer);
+  }, [remainingTime]);
+
+  const tick = () => {
+    if (remainingTime.hours === 0 && remainingTime.minutes === 0 && remainingTime.seconds === 0)
+      reset();
+    else if (remainingTime.minutes === 0 && remainingTime.seconds === 0)
+      setRemainingTime({
+        hours: remainingTime.hours - 1,
+        minutes: 59,
+        seconds: 59,
+      });
+    else if (remainingTime.seconds === 0)
+      setRemainingTime({
+        hours: remainingTime.hours,
+        minutes: remainingTime.minutes - 1,
+        seconds: 59,
+      });
+    else
+      setRemainingTime({
+        hours: remainingTime.hours,
+        minutes: remainingTime.minutes,
+        seconds: remainingTime.seconds - 1,
+      });
+  };
+
+  const reset = () =>
+    setRemainingTime({
+      hours,
+      minutes,
+      seconds,
+    });
+
+  return (
+    <div>
+      <p>Thời gian còn lai:
+        {' '}
+        <b>
+        {remainingTime.hours.toString().padStart(2, '0')}:
+        {remainingTime.minutes.toString().padStart(2, '0')}:
+        {remainingTime.seconds.toString().padStart(2, '0')}
+        </b>
+      </p>
+    </div>
+  );
+};
