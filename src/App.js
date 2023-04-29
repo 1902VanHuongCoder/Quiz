@@ -5,6 +5,7 @@ import {
   faPen,
   faHandshake,
   faComment,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { questions } from "./data";
 import { useState } from "react";
@@ -26,22 +27,27 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
 localStorage.setItem("signupInfo", JSON.stringify({ email: "", password: "" }));
+
 export default function Ungdung() {
   const [isHome, setIsHome] = useState(true);
   const [isTest, setTest] = useState(false);
-  const [isLogin, setIsLogin] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
   const [isSignup, setIsSignUp] = useState(false);
   return (
     <div className="container">
-      {isLogin && (
+      {/* {isLogin && (
         <>
           <LogIn setIsLogin={setIsLogin} setIsSignUp={setIsSignUp} />
         </>
       )}
       {isSignup && isLogin === false && (
         <SignUp setIsLogin={setIsLogin} setIsSignUp={setIsSignUp} />
-      )}
+      )} */}
       {isSignup === false && isLogin === false && (
         <>
           <Navigation
@@ -49,17 +55,52 @@ export default function Ungdung() {
             setIsTest={setTest}
             setIsSignUp={setIsSignUp}
             setIsLogin={setIsLogin}
+            setIsError={setIsError}
           />
           <Sidebar />
-          {isTest === true && <Test />}
-          {isHome === true && (
+          {isTest === true && isError === false && <Test />}
+          {isHome === true && isError === false && (
             <InforMyWeb setIsTest={setTest} setIsHomeAr={setIsHome} />
           )}
-          {isTest === false && isHome === false && <Enterquestion />}
+          {isTest === false && isHome === false && isError === false && (
+            <Enterquestion />
+          )}
+          {isError === true && <BasicCard />}
           <Footer />
         </>
       )}
     </div>
+  );
+}
+
+function BasicCard() {
+  return (
+    <Card
+      sx={{
+        maxWidth: 275,
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%,-50%)",
+      }}
+      variant="outlined"
+    >
+      <CardContent>
+        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+          Thông báo tình trạng trang
+        </Typography>
+        <Typography sx={{ mb: 1.5 }} color="text.secondary">
+          Admin: paulto
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: 22 }}>
+          Hiện tại trang vẫn chưa hoàn thiện <br />
+          Xin thông cảm!
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button size="small">Đọc thêm </Button>
+      </CardActions>
+    </Card>
   );
 }
 
@@ -212,7 +253,7 @@ function SignUp({ setIsLogin, setIsSignUp }) {
   };
   return (
     <ThemeProvider theme={theme}>
-      {isLoadingSignUp && <CircularProgress className="spinner"/>}
+      {isLoadingSignUp && <CircularProgress className="spinner" />}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -372,18 +413,23 @@ export function Navigation({
   setIsTest,
   setIsSignUp,
   setIsLogin,
+  setIsError,
 }) {
+  const [isOpenToggleMenu, setIsOpenTGM] = useState(false);
   let handleConvertToHome = () => {
     setIsHomeAr(true);
     setIsTest(false);
+    setIsError(false);
   };
   let handleConvertToTest = () => {
     setIsTest(true);
     setIsHomeAr(false);
+    setIsError(false);
   };
   let handleEnterQuestion = () => {
     setIsTest(false);
     setIsHomeAr(false);
+    setIsError(false);
   };
   const handleSignUp = () => {
     setIsSignUp(true);
@@ -394,6 +440,11 @@ export function Navigation({
   let handleToggleMenu = () => {
     let toggleMenu = document.querySelector(".nav-toggle-menu");
     toggleMenu.classList.toggle("open");
+    setIsOpenTGM(!isOpenToggleMenu);
+  };
+
+  const handleError = () => {
+    setIsError(true);
   };
   return (
     <header className="nav">
@@ -404,18 +455,29 @@ export function Navigation({
         <li onClick={handleConvertToHome}>Trang Chủ</li>
         <li onClick={handleConvertToTest}>Thi Thử</li>
         <li onClick={handleEnterQuestion}>Tạo đề thi</li>
-        <li>Hợp Tác</li>
-        <li>Phản Hồi</li>
+
+        {/***************** Default **************/}
+        <li onClick={handleError}>Hợp Tác</li>
+        <li onClick={handleError}>Phản Hồi</li>
       </ul>
       <div className="nav-login-signin">
         <button onClick={handleSignUp}>Đăng Ký</button>
         <button onClick={handleLogin}>Đăng Nhập</button>
       </div>
-      <FontAwesomeIcon
-        className="nav-bars-icon"
-        icon={faBars}
-        onClick={handleToggleMenu}
-      />
+      {isOpenToggleMenu ? (
+        <FontAwesomeIcon
+          className="nav-bars-icon"
+          icon={faXmark}
+          onClick={handleToggleMenu}
+          beat={true}
+        />
+      ) : (
+        <FontAwesomeIcon
+          className="nav-bars-icon"
+          icon={faBars}
+          onClick={handleToggleMenu}
+        />
+      )}
       <div className="nav-toggle-menu">
         <ul>
           <li onClick={handleConvertToHome}>
@@ -443,7 +505,7 @@ export function Navigation({
 export function Test() {
   const [curQue, setCurQue] = useState(0);
 
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [resultArray, setResultArray] = useState([]);
 
   const [isLoading, setIsloading] = useState(false);
 
@@ -451,6 +513,7 @@ export function Test() {
 
   const [scoreCalculated, setScoreCalculated] = useState(false);
 
+  console.log(resultArray[curQue]);
   function calculateScore(array) {
     let sum = 0;
     array.map((element) => {
@@ -469,7 +532,12 @@ export function Test() {
   };
 
   const handleAnswer = (id) => {
-    setSelectedAnswer(id);
+    const newAnswer = [...resultArray];
+
+    newAnswer[curQue] = id;
+
+    setResultArray(newAnswer);
+
     if (id === questions[curQue].correctAnswer) {
       let newArray = [...aresult];
       newArray[curQue] += 1;
@@ -489,7 +557,7 @@ export function Test() {
     }, 5000);
   };
   return (
-    <>
+    <div className="test-board">
       {scoreCalculated === false && (
         <div className="test-table">
           <h2>
@@ -504,7 +572,7 @@ export function Test() {
                     type="radio"
                     name="answer"
                     value={answer.id}
-                    checked={selectedAnswer === answer.id}
+                    checked={resultArray[curQue] === answer.id}
                     onChange={() => handleAnswer(answer.id)}
                   />{" "}
                   {answer.text}
@@ -523,13 +591,35 @@ export function Test() {
           </div>
         </div>
       )}
-      {isLoading && <CircularProgress className="spinner" />}
+      { isLoading && <CircularProgress className="spinner" sx={{ color: "red"}}/>} 
       {scoreCalculated && (
         <div className="calculateScore">
           {" "}
           Your score is: {calculateScore(aresult)}{" "}
         </div>
       )}
-    </>
+      <QuestionTable currentQuestion={curQue}/>
+    </div>
+  );
+}
+
+function QuestionTable({currentQuestion}) {
+  return (
+    <div className="test-questions-detail">
+      <h3>Thời gian còn lại: 30:22</h3>
+      <p>Danh sách câu hỏi: </p>
+      <div className="questions">
+        {questions.map((question) => 
+          {
+            if(question.id === currentQuestion + 1){
+              return <div style={{background: "#d3cbcb"}} key={question.id} className="question"> {question.id}</div>
+            }else
+            {
+              return <div key={question.id} className="question"> {question.id}</div>
+            }
+          }
+        )}
+      </div>
+    </div>
   );
 }

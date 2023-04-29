@@ -54,4 +54,27 @@ export const questions = [
     ],
     correctAnswer: "d",
   }
+  ,
+  {
+    id: 6,
+    question: "What is the currency of Japan?",
+    answers: [
+      { id: "a", text: "Yen" },
+      { id: "b", text: "Dollar" },
+      { id: "c", text: "Euro" },
+      { id: "d", text: "Pound" },
+    ],
+    correctAnswer: "d",
+  },
+  {
+    id: 7,
+    question: "What is the currency of Japan?",
+    answers: [
+      { id: "a", text: "Yen" },
+      { id: "b", text: "Dollar" },
+      { id: "c", text: "Euro" },
+      { id: "d", text: "Pound" },
+    ],
+    correctAnswer: "d",
+  }
 ];
