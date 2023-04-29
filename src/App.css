@@ -91,19 +91,16 @@ body {
 }
 
 .calculateScore {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 150px;
-  height: 150px;
+  position: relative;
   background-color: #ffffff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
+  width: 100%;
+  text-align: center;
+  padding: 30px 100px;
 }
-
+.calculateScore h3
+{
+  padding: 10px 0px;
+}
 .test-board .test-questions-detail 
 {
   width: calc(35% - 10px);

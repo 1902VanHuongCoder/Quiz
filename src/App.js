@@ -39,7 +39,7 @@ export default function Ungdung() {
   const [isHome, setIsHome] = useState(true);
   const [isTest, setTest] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   const [isSignup, setIsSignUp] = useState(false);
   return (
     <div className="container">
@@ -557,12 +557,18 @@ export function Test() {
 
   const [scoreCalculated, setScoreCalculated] = useState(false);
 
+  const [remainingTime, setRemainingTime] = useState({
+    hours: 0,
+    minutes: 10,
+    seconds: 0,
+  });
   function calculateScore(array) {
     let sum = 0;
     array.map((element) => {
       if (element === 1) {
         sum += 1;
       }
+      return sum;
     });
     return sum;
   }
@@ -573,14 +579,12 @@ export function Test() {
   const handlePrevious = () => {
     setCurQue(curQue - 1);
   };
-
   const handleAnswer = (id) => {
     const newAnswer = [...resultArray];
 
     newAnswer[curQue] = id;
 
     setResultArray(newAnswer);
-
     if (id === questions[curQue].correctAnswer) {
       let newArray = [...aresult];
       newArray[curQue] += 1;
@@ -599,6 +603,7 @@ export function Test() {
       setScoreCalculated(true);
     }, 5000);
   };
+
   return (
     <div className="test-board">
       {scoreCalculated === false && (
@@ -649,26 +654,50 @@ export function Test() {
       )}
       {scoreCalculated && (
         <div className="calculateScore">
-          {" "}
-          Your score is: {calculateScore(aresult)}{" "}
+          <h3>Kết quả làm bài của bạn </h3>
+          <p>
+            Thời gian làm bài: {' '}
+            {remainingTime.hours.toString().padStart(2, "0") +
+              ":" +
+              remainingTime.minutes.toString().padStart(2, "0") +
+              ":" +
+              remainingTime.seconds.toString().padStart(2, "0")}
+          </p>
+          <p>
+            Đạt: {calculateScore(aresult)}/{questions.length + 1} {' '} câu
+          </p>
+          <p>Điểm: {calculateScore(aresult)} đ</p>
         </div>
       )}
-      <QuestionTable
-        currentQuestion={curQue}
-        setCurQue={setCurQue}
-        resultArray={resultArray}
-      />
+      {scoreCalculated === false && (
+        <QuestionTable
+          currentQuestion={curQue}
+          setCurQue={setCurQue}
+          resultArray={resultArray}
+          remainingTime={remainingTime}
+          setRemainingTime={setRemainingTime}
+        />
+      )}
     </div>
   );
 }
 
-function QuestionTable({ currentQuestion, setCurQue, resultArray }) {
+function QuestionTable({
+  currentQuestion,
+  setCurQue,
+  resultArray,
+  remainingTime,
+  setRemainingTime,
+}) {
   const handleCurrentQuestion = (id) => {
     setCurQue(id - 1);
   };
   return (
     <div className="test-questions-detail">
-      <CountdownTimer />
+      <CountdownTimer
+        remainingTime={remainingTime}
+        setRemainingTime={setRemainingTime}
+      />
       <p>Danh sách câu hỏi: </p>
       <div className="questions">
         {questions.map((question) => {
@@ -722,13 +751,13 @@ function QuestionTable({ currentQuestion, setCurQue, resultArray }) {
   );
 }
 
-const CountdownTimer = ({ hours = 0, minutes = 30, seconds = 0 }) => {
-  const [remainingTime, setRemainingTime] = useState({
-    hours,
-    minutes,
-    seconds,
-  });
-
+const CountdownTimer = ({
+  hours,
+  minutes,
+  seconds,
+  remainingTime,
+  setRemainingTime,
+}) => {
   useEffect(() => {
     const timer =
       remainingTime.seconds > 0 ||
@@ -738,7 +767,7 @@ const CountdownTimer = ({ hours = 0, minutes = 30, seconds = 0 }) => {
         : null;
 
     return () => clearInterval(timer);
-  }, [remainingTime]);
+  });
 
   const tick = () => {
     if (
