@@ -411,8 +411,8 @@ body {
 
 .loader {
   position: absolute;
-  top: 50%;
-  left: 44%;
+  top: 40%;
+  left: 43%;
   width: 100px;
   height: 100px;
   transform-style: preserve-3d;
@@ -436,13 +436,13 @@ body {
   0%,
   100% {
     transform: translateZ(-100px);
-    border: 5px solid rgb(28, 240, 240);
+    border: 5px solid #29ed71;
     opacity: 0;
   }
 
   50% {
     transform: translateZ(100px);
-    border: 5px solid rgb(12, 226, 48);
+    border: 5px solid #ec64fb;
     opacity: 1;
   }
 }
@@ -576,8 +576,7 @@ body {
     display: none;
   }
 
-  .info-box,
-  .test-table {
+  .info-box {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -593,26 +592,52 @@ body {
 
 @media screen and (max-width: 600px) {
   .info-box {
-    width: 362px;
+    width: 90%;
   }
 
   .container {
-    height: 540px;
+    min-height: 100vh;
+  }
+
+  .test-board {
+    flex-direction: column;
+    width: 90%;
   }
 
   .test-table {
-    position: relative;
-    width: 400px;
+    width: 100%;
+  }
+
+  .test-board .test-questions-detail {
+    width: 100%;
+  }
+
+  .enter-question-form {
+    width: 90%;
+  }
+
+  .enter-question-form label #question {
+    width: 100%;
+    height: 40px;
+    border: 1px solid rgba(0, 0, 0, .5);
+  }
+
+  .enter-question-form .answer-group label input {
+    width: 100%;
+    height: 40px;
+    border: 1px solid rgba(0, 0, 0, .5);
+  }
+
+  .enter-question-form .answer-group label:last-child input {
+    width: 100%;
   }
 }
 
 @media screen and (max-width: 420px) {
-  .container {
-    height: 568px;
-  }
 
   .info-box {
-    width: 260px;
+    width: 95%;
+    height: 350px;
   }
 
   .info-box h1 {
@@ -625,9 +650,5 @@ body {
 
   .info-box .info-box-button {
     padding: 0;
-  }
-
-  .test-table {
-    width: 240px;
   }
 }

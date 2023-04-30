@@ -41,7 +41,7 @@ export default function Ungdung() {
 
   const [isError, setIsError] = useState(false);
 
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
 
   const [isSignup, setIsSignUp] = useState(false);
 
@@ -363,8 +363,7 @@ export function Enterquestion({ input, setInput }) {
     inputObject.question = e.target.value;
   };
   const handleSubmit = (event) => {
-    event.preventDefault();
-    setInput([...input, inputObject]);
+    console.log('Hello world!');
   };
   return (
     <form className="enter-question-form" onSubmit={handleSubmit}>
@@ -451,9 +450,7 @@ export function InforMyWeb({ setIsTest, setIsHomeAr }) {
 export function Navigation({
   setIsHomeAr,
   setIsTest,
-  setIsSignUp,
-  setIsLogin,
-  setIsError,
+  setIsError
 }) {
   const [isOpenToggleMenu, setIsOpenTGM] = useState(false);
   let handleConvertToHome = () => {
@@ -536,11 +533,11 @@ export function Navigation({
           <li onClick={handleEnterQuestion}> + Tạo đề thi</li>
           <li>
             {" "}
-            <FontAwesomeIcon icon={faHandshake} /> Hợp Tác
+            <FontAwesomeIcon icon={faHandshake} onClick={handleError}/> Hợp Tác
           </li>
           <li>
             {" "}
-            <FontAwesomeIcon icon={faComment} /> Phản Hồi
+            <FontAwesomeIcon icon={faComment} onClick={handleError} /> Phản Hồi
           </li>
         </ul>
       </div>
