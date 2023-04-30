@@ -26,7 +26,6 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import CircularProgress from "@mui/material/CircularProgress";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -59,10 +58,17 @@ export default function Ungdung() {
         </>
       )}
       {isLoading && (
-        <CircularProgress className="spinner" sx={{ color: "red" }} />
+        <>
+          {/* <CircularProgress className="spinner" sx={{ color: "red" }} /> */}
+          <Loader />
+        </>
       )}
       {isSignup && isLogin === false && (
-        <SignUp setIsLogin={setIsLogin} setIsSignUp={setIsSignUp} />
+        <SignUp
+          setIsLogin={setIsLogin}
+          setIsSignUp={setIsSignUp}
+          setIsLoading={setIsLoading}
+        />
       )}
       {isSignup === false && isLogin === false && (
         <>
@@ -97,16 +103,29 @@ export default function Ungdung() {
   );
 }
 
+function Loader() {
+  return (
+    <div className="loader">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  );
+}
+
 function BasicCard() {
   return (
     <Card
       sx={{
-        maxWidth: 275,
+        maxWidth: 350,
         position: "absolute",
         top: "50%",
         left: "50%",
         transform: "translate(-50%,-50%)",
         boxShadow: "0 0 15px rgba(0,0,0,.2)",
+        borderRadius: "20px",
       }}
       variant="outlined"
     >
@@ -271,7 +290,7 @@ function SignUp({ setIsLogin, setIsSignUp, setIsLoading }) {
       setIsSignUp(false);
       localStorage.setItem("signupInfo", JSON.stringify(infoUser));
       setIsLoading(false);
-    }, 2000);
+    }, 5000);
   };
   return (
     <ThemeProvider theme={theme}>
