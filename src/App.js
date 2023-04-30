@@ -37,16 +37,29 @@ localStorage.setItem("signupInfo", JSON.stringify({ email: "", password: "" }));
 
 export default function Ungdung() {
   const [isHome, setIsHome] = useState(true);
+
   const [isTest, setTest] = useState(false);
+
   const [isError, setIsError] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
+
+  const [isLogin, setIsLogin] = useState(true);
+
   const [isSignup, setIsSignUp] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
   return (
     <div className="container">
       {isLogin && (
         <>
-          <LogIn setIsLogin={setIsLogin} setIsSignUp={setIsSignUp} />
+          <LogIn
+            setIsLogin={setIsLogin}
+            setIsSignUp={setIsSignUp}
+            setIsLoading={setIsLoading}
+          />
         </>
+      )}
+      {isLoading && (
+        <CircularProgress className="spinner" sx={{ color: "red" }} />
       )}
       {isSignup && isLogin === false && (
         <SignUp setIsLogin={setIsLogin} setIsSignUp={setIsSignUp} />
@@ -64,7 +77,9 @@ export default function Ungdung() {
           </header>
           {isTest === false && <Sidebar />}
           <div className="main">
-            {isTest === true && isError === false && <Test />}
+            {isTest === true && isError === false && (
+              <Test setIsloading={setIsLoading} />
+            )}
             {isHome === true && isError === false && (
               <InforMyWeb setIsTest={setTest} setIsHomeAr={setIsHome} />
             )}
@@ -134,8 +149,7 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-function LogIn({ setIsSignUp, setIsLogin }) {
-  const [isLoadingLogin, setIsLoadingLogin] = useState(false);
+function LogIn({ setIsSignUp, setIsLogin, setIsLoading }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -143,11 +157,10 @@ function LogIn({ setIsSignUp, setIsLogin }) {
       email: data.get("email"),
       password: data.get("password"),
     };
-    console.log(inputLogin);
     const localInfo = JSON.parse(localStorage.getItem("signupInfo"));
-    setIsLoadingLogin(true);
+    setIsLoading(true);
     setTimeout(() => {
-      setIsLoadingLogin(false);
+      setIsLoading(false);
       if (
         inputLogin.email === localInfo.email &&
         inputLogin.password === localInfo.password
@@ -157,7 +170,7 @@ function LogIn({ setIsSignUp, setIsLogin }) {
       } else {
         alert("Ban chua co tai khoan! Hay tao tai khoan!");
       }
-    }, 2000);
+    }, 5000);
   };
   const handleSignUp = () => {
     setIsLogin(false);
@@ -165,7 +178,6 @@ function LogIn({ setIsSignUp, setIsLogin }) {
   };
   return (
     <ThemeProvider theme={theme}>
-      {isLoadingLogin && <CircularProgress className="spinner" />}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -223,12 +235,12 @@ function LogIn({ setIsSignUp, setIsLogin }) {
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
-                  Forgot password?
+                  Quên mật khẩu
                 </Link>
               </Grid>
               <Grid item>
                 <Link href="#" variant="body2" onClick={handleSignUp}>
-                  {"Don't have an account? Sign Up"}
+                  {"Bạn chưa có tài khoản! Đăng ký"}
                 </Link>
               </Grid>
             </Grid>
@@ -241,8 +253,8 @@ function LogIn({ setIsSignUp, setIsLogin }) {
 }
 
 /***************** FORM SIGN UP ***********************/
-function SignUp({ setIsLogin, setIsSignUp }) {
-  const [isLoadingSignUp, setIsLoadingSignUp] = useState(false);
+
+function SignUp({ setIsLogin, setIsSignUp, setIsLoading }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -251,19 +263,18 @@ function SignUp({ setIsLogin, setIsSignUp }) {
       password: data.get("password"),
     };
     const localInfo = JSON.parse(localStorage.getItem("signupInfo"));
-    setIsLoadingSignUp(true);
+    setIsLoading(true);
     setTimeout(() => {
       localInfo.email === infoUser.email
         ? alert("Xin loi! Tai khoan nay da duoc su dung")
         : setIsLogin(false);
       setIsSignUp(false);
       localStorage.setItem("signupInfo", JSON.stringify(infoUser));
-      setIsLoadingSignUp(false);
+      setIsLoading(false);
     }, 2000);
   };
   return (
     <ThemeProvider theme={theme}>
-      {isLoadingSignUp && <CircularProgress className="spinner" />}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -546,14 +557,20 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-export function Test() {
+export function Test({ setIsloading }) {
   const [curQue, setCurQue] = useState(0);
 
   const [resultArray, setResultArray] = useState([]);
 
-  const [isLoading, setIsloading] = useState(false);
-
   const [aresult, setAResult] = useState(Array(questions.length).fill(0));
+
+  /* Phát sinh một số vấn đề về tính năng trích xuất thời gian làm bài của user
+  Vấn: scoreCalculated và remainingTime không liên quan nhau
+  Nhưng khi scoreCalculated ở trạng thái TRUE thì remainingTime stop 
+  Không thay đổi các thuộc tính nữa và khi chuyển scoreCalculated thành FALSE
+  Thì remainingTime lại thay đổi trạng thái bình thường ?
+  Vấn đề gì đang xảy ra???
+*/
 
   const [scoreCalculated, setScoreCalculated] = useState(false);
 
@@ -562,6 +579,7 @@ export function Test() {
     minutes: 10,
     seconds: 0,
   });
+
   function calculateScore(array) {
     let sum = 0;
     array.map((element) => {
@@ -649,14 +667,12 @@ export function Test() {
           </div>
         </div>
       )}
-      {isLoading && (
-        <CircularProgress className="spinner" sx={{ color: "red" }} />
-      )}
+
       {scoreCalculated && (
         <div className="calculateScore">
           <h3>Kết quả làm bài của bạn </h3>
           <p>
-            Thời gian làm bài: {' '}
+            Thời gian làm bài:{" "}
             {remainingTime.hours.toString().padStart(2, "0") +
               ":" +
               remainingTime.minutes.toString().padStart(2, "0") +
@@ -664,7 +680,7 @@ export function Test() {
               remainingTime.seconds.toString().padStart(2, "0")}
           </p>
           <p>
-            Đạt: {calculateScore(aresult)}/{questions.length + 1} {' '} câu
+            Đạt: {calculateScore(aresult)}/{questions.length + 1} câu
           </p>
           <p>Điểm: {calculateScore(aresult)} đ</p>
         </div>

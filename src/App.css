@@ -296,7 +296,7 @@ body {
 /***** Sidebar ********/
 
 .side-bar {
-  position: absolute;
+  position: fixed;
   top: 50%;
   transform: translate(0, -50%);
   height: fit-content;
@@ -305,6 +305,7 @@ body {
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
   box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+  z-index: 100;
 }
 
 .side-bar .side-bar-content {
@@ -402,6 +403,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 101;
 }
 /****** Responsive ********/
 @media screen and (min-width: 992px){
