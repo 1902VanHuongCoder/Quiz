@@ -76,8 +76,6 @@ export default function Ungdung() {
             <Navigation
               setIsHomeAr={setIsHome}
               setIsTest={setTest}
-              setIsSignUp={setIsSignUp}
-              setIsLogin={setIsLogin}
               setIsError={setIsError}
             />
           </header>
@@ -92,7 +90,7 @@ export default function Ungdung() {
             {isTest === false && isHome === false && isError === false && (
               <Enterquestion />
             )}
-            {isError === true && <BasicCard />}
+            {isError === true && isHome === false && isTest === false && <BasicCard />}
           </div>
           <footer>
             <Footer />
@@ -126,6 +124,7 @@ function BasicCard() {
         transform: "translate(-50%,-50%)",
         boxShadow: "0 0 15px rgba(0,0,0,.2)",
         borderRadius: "20px",
+        zIndex: 100,
       }}
       variant="outlined"
     >
@@ -476,6 +475,8 @@ export function Navigation({
 
   const handleError = () => {
     setIsError(true);
+    setIsHomeAr(false);
+    setIsTest(false);
   };
   let localInfo = JSON.parse(localStorage.getItem("signupInfo"));
   let emailUser = localInfo.email;

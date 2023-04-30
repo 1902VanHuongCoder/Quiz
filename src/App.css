@@ -634,7 +634,9 @@ body {
 }
 
 @media screen and (max-width: 420px) {
-
+  .enter-question-form h1 {
+    font-size: 21px;
+  }
   .info-box {
     width: 95%;
     height: 350px;
