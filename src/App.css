@@ -613,7 +613,10 @@ body {
   }
 
   .enter-question-form {
-    width: 90%;
+    width: 85%;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .enter-question-form label #question {
@@ -637,6 +640,7 @@ body {
   .enter-question-form h1 {
     font-size: 21px;
   }
+
   .info-box {
     width: 95%;
     height: 350px;
@@ -652,5 +656,18 @@ body {
 
   .info-box .info-box-button {
     padding: 0;
+  }
+
+  .calculateScore {
+    position: relative;
+    background-color: #ffffff;
+    width: 100%;
+    text-align: center;
+    padding: 30px 10px;
+}
+
+.css-18ju88s-MuiPaper-root-MuiCard-root
+  {
+    width: 90%;
   }
 }

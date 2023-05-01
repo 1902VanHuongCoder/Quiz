@@ -41,7 +41,7 @@ export default function Ungdung() {
 
   const [isError, setIsError] = useState(false);
 
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
 
   const [isSignup, setIsSignUp] = useState(false);
 
@@ -90,7 +90,9 @@ export default function Ungdung() {
             {isTest === false && isHome === false && isError === false && (
               <Enterquestion />
             )}
-            {isError === true && isHome === false && isTest === false && <BasicCard />}
+            {isError === true && isHome === false && isTest === false && (
+              <BasicCard />
+            )}
           </div>
           <footer>
             <Footer />
@@ -362,7 +364,7 @@ export function Enterquestion({ input, setInput }) {
     inputObject.question = e.target.value;
   };
   const handleSubmit = (event) => {
-    console.log('Hello world!');
+    console.log("Hello world!");
   };
   return (
     <form className="enter-question-form" onSubmit={handleSubmit}>
@@ -446,11 +448,7 @@ export function InforMyWeb({ setIsTest, setIsHomeAr }) {
     </div>
   );
 }
-export function Navigation({
-  setIsHomeAr,
-  setIsTest,
-  setIsError
-}) {
+export function Navigation({ setIsHomeAr, setIsTest, setIsError }) {
   const [isOpenToggleMenu, setIsOpenTGM] = useState(false);
   let handleConvertToHome = () => {
     setIsHomeAr(true);
@@ -478,6 +476,7 @@ export function Navigation({
     setIsHomeAr(false);
     setIsTest(false);
   };
+
   let localInfo = JSON.parse(localStorage.getItem("signupInfo"));
   let emailUser = localInfo.email;
   let nameUser = emailUser.substring(0, emailUser.indexOf("@"));
@@ -532,13 +531,13 @@ export function Navigation({
             <FontAwesomeIcon icon={faPen} /> Thi Thử
           </li>
           <li onClick={handleEnterQuestion}> + Tạo đề thi</li>
-          <li>
+          <li onClick={handleError}>
             {" "}
-            <FontAwesomeIcon icon={faHandshake} onClick={handleError}/> Hợp Tác
+            <FontAwesomeIcon icon={faHandshake} /> Hợp Tác
           </li>
-          <li>
+          <li onClick={handleError}>
             {" "}
-            <FontAwesomeIcon icon={faComment} onClick={handleError} /> Phản Hồi
+            <FontAwesomeIcon icon={faComment} /> Phản Hồi
           </li>
         </ul>
       </div>
