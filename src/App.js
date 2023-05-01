@@ -11,7 +11,12 @@ import { questions } from "./data";
 import { useState, useEffect } from "react";
 import "./App.css";
 import logo from "./logo.png";
-
+import product1 from "./img/productImg/product1.jpg";
+import product2 from "./img/productImg/product2.jpg";
+import product3 from "./img/productImg/product3.jpg";
+import product4 from "./img/productImg/product4.jpg";
+import product5 from "./img/productImg/product5.jpg";
+import product6 from "./img/productImg/product6.jpg";
 /************************* Use Material Libary *********************/
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -31,6 +36,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import { styled } from "@mui/material/styles";
 import Badge from "@mui/material/Badge";
+import CardMedia from "@mui/material/CardMedia";
 
 localStorage.setItem("signupInfo", JSON.stringify({ email: "", password: "" }));
 
@@ -41,7 +47,7 @@ export default function Ungdung() {
 
   const [isError, setIsError] = useState(false);
 
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
 
   const [isSignup, setIsSignUp] = useState(false);
 
@@ -79,8 +85,8 @@ export default function Ungdung() {
               setIsError={setIsError}
             />
           </header>
-          {isTest === false && <Sidebar />}
-          <div className="main">
+          <div className="showcase">
+            {isTest === false && <Sidebar />}
             {isTest === true && isError === false && (
               <Test setIsloading={setIsLoading} />
             )}
@@ -94,6 +100,7 @@ export default function Ungdung() {
               <BasicCard />
             )}
           </div>
+          <div className="main-products">{isHome && <Products />}</div>
           <footer>
             <Footer />
           </footer>
@@ -103,15 +110,77 @@ export default function Ungdung() {
   );
 }
 
+function Products() {
+  return (
+    <div className="container-products">
+      <h1>Sản phẩm</h1>
+      <div className="products-list">
+        <ImgMediaCard
+          srcImg={product1}
+          name="Sản phẩm 1"
+          describe="Đây là sản phẩm được viết bằng HTML - CSS"
+          title="formLogin"
+        />
+        <ImgMediaCard
+          srcImg={product2}
+          name="Sản phẩm 2"
+          describe="Đây là một hover card với hiệu ứng đẹp mắt (HTML5 - CSS3)"
+          title="hover card"
+        />
+        <ImgMediaCard
+          srcImg={product3}
+          name="Sản phẩm 3"
+          describe="Máy tính casio với các tính năng cơ bản( HTML5 - CSS3 - JS6)"
+          title="casio"
+        />
+        <ImgMediaCard
+          srcImg={product4}
+          name="Sản phẩm 4"
+          describe="Form Login tích hợp với form đăng ký (HTML5 - CSS3 - JS6)"
+          title="login form"
+        />
+        <ImgMediaCard
+          srcImg={product5}
+          name="Sản phẩm 5"
+          describe="Thanh điều hướng với hiệu ứng đặc biệt (HTML - CSS3)"
+          title="navigation effect"
+        />
+        <ImgMediaCard
+          srcImg={product6}
+          name="Sản phẩm 6"
+          describe="Hiệu ứng văn bản đặc biệt (HTML5 - CSS3)"
+          title="text effect"
+        />
+      </div>
+    </div>
+  );
+}
+
 function Loader() {
   return (
-    <div className="loader">
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
+    <div className="container-loader">
+      <div className="loader"></div>
     </div>
+  );
+}
+
+function ImgMediaCard({ name, describe, srcImg, title }) {
+  return (
+    <Card sx={{ width: 300 }}>
+      <CardMedia sx={{ height: 220 }} image={srcImg} title={title} />
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+          {name}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {describe}
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button size="small">More</Button>
+        <Button size="small">Source</Button>
+      </CardActions>
+    </Card>
   );
 }
 
