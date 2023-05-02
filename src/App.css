@@ -12,13 +12,13 @@ body {
   position: relative;
   width: 100%;
   min-height: 100vh;
-  overflow: scroll;
 }
 
 .showcase {
   position: relative;
   width: 100%;
   min-height: 100vh;
+  overflow: scroll;
 }
 
 .test-board {
@@ -31,8 +31,8 @@ body {
   display: flex;
   padding: 20px;
   column-gap: 10px;
-  border-radius: 20px;
-  box-shadow: 0 0 15px rgb(0 0 0 / 20%);
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgb(0 0 0 / 10%);
 }
 
 .test-table {
@@ -111,16 +111,21 @@ body {
   flex-wrap: wrap;
   background: #dadad9;
   padding: 10px 10px;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   row-gap: 10px;
 }
 
 .test-board .test-questions-detail .questions .question {
-  padding: 5px 10px;
   background: #fff;
   border: 1px solid rgba(0, 0, 0, .5);
   border-radius: 5px;
   cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
 }
 
 /************** Navigation *****************/
@@ -223,9 +228,9 @@ body {
   transform: translate(-70%, -50%);
   width: 560px;
   height: fit-content;
-  border: 1px solid rgba(0, 0, 0, .5);
+  border: 1px solid rgba(0, 0, 0, .1);
   padding: 20px;
-  border-radius: 20px;
+  border-radius: 10px;
   background: #fff;
   z-index: 500;
 }
@@ -302,9 +307,9 @@ body {
   height: fit-content;
   padding: 20px;
   background: #fff;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
-  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
   z-index: 100;
 }
 
@@ -480,15 +485,18 @@ body {
 }
 
 /****** Products ***********/
-
+.main-products
+{
+  height: 100vh;
+}
 .container-products {
   position: relative;
   width: 100%;
-  height: 100vh;
   background: #fff;
+  padding: 30px 30px;
 }
 
-.container-products
+.container-products h1
 {
   width: 100%;
   text-align: center;
@@ -499,9 +507,9 @@ body {
   display: flex;
   flex-wrap: wrap;
   row-gap: 30px;
-  background: #ffffff;
+  background: rgba(0, 0, 0, 0.091);
   justify-content: space-around;
-  padding: 30px 100px;
+  padding: 30px 30px;
 }
 
 

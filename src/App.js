@@ -39,7 +39,10 @@ import Badge from "@mui/material/Badge";
 import CardMedia from "@mui/material/CardMedia";
 
 localStorage.setItem("signupInfo", JSON.stringify({ email: "", password: "" }));
+/**Danh sách các component trong ứng dụng này: **
+  <Product />
 
+*/
 export default function Ungdung() {
   const [isHome, setIsHome] = useState(true);
 
@@ -100,7 +103,11 @@ export default function Ungdung() {
               <BasicCard />
             )}
           </div>
-          <div className="main-products">{isHome && <Products />}</div>
+          {isHome && (
+            <div className="main-products">
+              <Products />
+            </div>
+          )}
           <footer>
             <Footer />
           </footer>
@@ -110,6 +117,19 @@ export default function Ungdung() {
   );
 }
 
+function Alert({ alertTitle, nameAction, description, handleLoading }) {
+  return (
+    <div className="alert-box" style={{width: "100%", textAlign: "center"}}>
+      <h1>{alertTitle}</h1>
+      <p>{description}</p>
+      <Button sx={{
+        marginTop: "10px"
+      }}variant="contained" onClick={handleLoading}>
+        {nameAction}
+      </Button>
+    </div>
+  );
+}
 function Products() {
   return (
     <div className="container-products">
@@ -658,7 +678,7 @@ export function Test({ setIsloading }) {
 */
 
   const [scoreCalculated, setScoreCalculated] = useState(false);
-
+  const [notification, setNotification] = useState(true);
   const [remainingTime, setRemainingTime] = useState({
     hours: 0,
     minutes: 10,
@@ -707,9 +727,26 @@ export function Test({ setIsloading }) {
     }, 5000);
   };
 
+  const handleStartQuiz = () => {
+    setIsloading(true);
+    setTimeout(() => {
+      setIsloading(false);
+      setNotification(false);
+    }, 5000);
+  };
+  // function Alert({ alertTitle, nameAction, description, handleLoading }) {
+
   return (
     <div className="test-board">
-      {scoreCalculated === false && (
+      {notification && (
+        <Alert
+          alertTitle="Bắt đầu bài thi thử"
+          nameAction="Bắt đầu"
+          description="Bắt đầu bài thi thử trong 10 phút."
+          handleLoading={handleStartQuiz}
+        />
+      )}
+      {scoreCalculated === false && notification === false && (
         <div className="test-table">
           <h2>
             {" "}
@@ -752,7 +789,15 @@ export function Test({ setIsloading }) {
           </div>
         </div>
       )}
-
+      {scoreCalculated === false && notification === false && (
+        <QuestionTable
+          currentQuestion={curQue}
+          setCurQue={setCurQue}
+          resultArray={resultArray}
+          remainingTime={remainingTime}
+          setRemainingTime={setRemainingTime}
+        />
+      )}
       {scoreCalculated && (
         <div className="calculateScore">
           <h3>Kết quả làm bài của bạn </h3>
@@ -769,15 +814,6 @@ export function Test({ setIsloading }) {
           </p>
           <p>Điểm: {calculateScore(aresult)} đ</p>
         </div>
-      )}
-      {scoreCalculated === false && (
-        <QuestionTable
-          currentQuestion={curQue}
-          setCurQue={setCurQue}
-          resultArray={resultArray}
-          remainingTime={remainingTime}
-          setRemainingTime={setRemainingTime}
-        />
       )}
     </div>
   );
